@@ -19,6 +19,15 @@ def health():
     return jsonify(dict(status="OK")), status.HTTP_200_OK
 
 
+############################################################
+# Internal Error Endpoint
+############################################################
+@app.route("/accounts/error_500")
+def internal_error():
+    """Internal error simulation"""
+    abort(500, 'Internal error')
+
+
 ######################################################################
 # GET INDEX
 ######################################################################
