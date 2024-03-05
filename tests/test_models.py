@@ -7,7 +7,7 @@ import unittest
 import os
 from datetime import date
 from service import app
-from service.models import Account, DataValidationError, db
+from service.models import PersistentBase, Account, DataValidationError, db
 from tests.factories import AccountFactory
 
 DATABASE_URI = os.getenv(
@@ -47,7 +47,12 @@ class TestAccount(unittest.TestCase):
     #  T E S T   C A S E S
     ######################################################################
 
-    def test_repr(self):
+    def test_db_init(self):
+        """Test PersistentBase init"""
+        database = PersistentBase()
+        self.assertEqual(database.id, None)
+
+    def test_account_repr(self):
         """It should provide account representation"""
         account = AccountFactory()
         account.create()
