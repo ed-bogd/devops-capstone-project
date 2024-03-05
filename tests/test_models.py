@@ -8,6 +8,7 @@ import os
 from service import app
 from service.models import Account, DataValidationError, db
 from tests.factories import AccountFactory
+from datetime import date
 
 DATABASE_URI = os.getenv(
     "DATABASE_URI", "postgresql://postgres:postgres@localhost:5432/postgres"
@@ -45,6 +46,12 @@ class TestAccount(unittest.TestCase):
     ######################################################################
     #  T E S T   C A S E S
     ######################################################################
+
+    def test_repr(self):
+        """It should provide account representation"""
+        account = AccountFactory()
+        account.create()
+        self.assertEqual(repr(account), f"<Account {account.name} id=[{account.id}]>")
 
     def test_create_an_account(self):
         """It should Create an Account and assert that it exists"""
@@ -165,6 +172,10 @@ class TestAccount(unittest.TestCase):
         self.assertEqual(new_account.address, account.address)
         self.assertEqual(new_account.phone_number, account.phone_number)
         self.assertEqual(new_account.date_joined, account.date_joined)
+        # Test if date_joined is not defined
+        serial_account["date_joined"] = None
+        new_account.deserialize(serial_account)
+        self.assertEqual(new_account.date_joined, date.today())
 
     def test_deserialize_with_key_error(self):
         """It should not Deserialize an account with a KeyError"""
